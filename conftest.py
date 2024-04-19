@@ -4,27 +4,6 @@ import pytest
 from helpers import generate_random_string
 from urls import REGISTER, INGREDIENTS, ORDERS
 
-
-@pytest.fixture 
-def register_new_user():
-    login_pass = []
-    email = generate_random_string(10) + '@gmail.com'
-    password = generate_random_string(10)
-    name = generate_random_string(10)
-    payload = {
-        "email": email,
-        "password": password,
-        "name": name
-    }
-    response = requests.post(REGISTER, data=payload)
-    if response.status_code == 200:
-        login_pass = {
-        "email": email,
-        "password": password,
-        "name": name
-    }
-    return {'login_pass': login_pass, 'response': response}
-
 @pytest.fixture 
 def generate_payload():
     email = generate_random_string(10) + '@gmail.com'
@@ -36,6 +15,16 @@ def generate_payload():
         "name": name
     }
     yield payload
+
+@pytest.fixture 
+def register_new_user(generate_payload):
+    login_pass = []
+    payload = generate_payload
+    response = requests.post(REGISTER, data=payload)
+    if response.status_code == 200:
+        login_pass = payload
+    return {'login_pass': login_pass, 'response': response}
+
 
 @pytest.fixture 
 def get_ingredients():

@@ -27,7 +27,6 @@ class TestCreateOrder:
             ]   
         }
         response = requests.post(ORDERS, data=payload)
-        print(response.text)
         assert response.status_code == 200 and '"success":true' in response.text
 
     @allure.title('Создание заказа без ингредиентов')
@@ -39,7 +38,6 @@ class TestCreateOrder:
             'Authorization': register_new_user['response'].json().get('accessToken')
             }
         response = requests.post(ORDERS, headers=headers, data=payload)
-        print(response.text)
         assert response.status_code == 400 and response.json().get('message')== "Ingredient ids must be provided"
 
     @allure.title('Создание заказа с невалидным хешом')
@@ -53,5 +51,4 @@ class TestCreateOrder:
             'Authorization': register_new_user['response'].json().get('accessToken')
             }
         response = requests.post(ORDERS, headers=headers, data=payload)
-        print(response.text)
         assert response.status_code == 400 and response.json().get('message')== "One or more ids provided are incorrect"
